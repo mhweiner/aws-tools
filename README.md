@@ -6,7 +6,7 @@ A collection of tools for managing AWS infrastructure.
 
 You must first authenticate via aws cli or export keys into shell.
 
-### create-stack
+### create-stack 
 
 ```bash
 ./bin/create-stack {STACK_NAME} {TEMPLATE_FILE} {PARAMS_FILE}

@@ -1,12 +1,16 @@
-name: release
+name: Release
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
+    branches:
+      - main
+      - next
 jobs:
   release:
-    name: release
+    name: Release
     runs-on: ubuntu-latest
+    concurrency: 
+      group: deploy-${{github.ref}}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -14,14 +18,15 @@ jobs:
           fetch-tags: true
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'  
-          registry-url: 'https://registry.npmjs.org'
+          node-version: latest
+          registry-url: "https://registry.npmjs.org"
           cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
-      - run: npx autorel@^2
+      - name: Install app dependencies cleanly
+        run: npm ci
+      - name: Linting
+        run: npm run lint
+      - name: Release
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          NPM_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: npx autorel --publish

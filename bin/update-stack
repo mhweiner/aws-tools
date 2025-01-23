@@ -1,7 +1,0 @@
-#!/usr/bin/env node
-
-const stackName = process.argv[2];
-const templateFile = process.argv[3];
-const paramsFile = process.argv[4];
-
-require('../dist/updateStack').updateStack(stackName, templateFile, paramsFile);

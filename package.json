@@ -14,9 +14,7 @@
     "package-lock.json"
   ],
   "bin": {
-    "create-stack": "bin/create-stack",
-    "redeploy-stack": "bin/redeploy-stack",
-    "update-stack": "bin/update-stack"
+    "aws-tools": "bin/aws-tools"
   },
   "repository": {
     "type": "git",

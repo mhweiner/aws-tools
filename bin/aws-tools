@@ -1,0 +1,24 @@
+const action = process.argv[2];
+const stackName = process.argv[3];
+const templateFile = process.argv[4];
+const paramsFile = process.argv[5];
+
+if (!['create-stack', 'redeploy-stack', 'update-stack'].includes(action)) {
+    console.error('Invalid action. Must be one of: create-stack, redeploy-stack, update-stack');
+    process.exit(1);
+}
+
+switch (action) {
+    case 'create-stack':
+        require('../dist/createStack').createStack(stackName, templateFile, paramsFile);
+        break;
+    case 'redeploy-stack':
+        require('../dist/redeployStack').redeployStack(stackName, templateFile, paramsFile);
+        break;
+    case 'update-stack':
+        require('../dist/updateStack').updateStack(stackName, templateFile, paramsFile);
+        break;
+    default:
+        console.error('Unknown action');
+        process.exit(1);
+}

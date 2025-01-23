@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-
-const stackName = process.argv[2];
-const templateFile = process.argv[3];
-
-require('../dist/redeployStack').redeployStack(stackName, templateFile);

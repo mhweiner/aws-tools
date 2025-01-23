@@ -1,5 +1,5 @@
 {
-  "name": "aws-tools",
+  "name": "@mhweiner/aws-tools",
   "version": "0.0.0-autorel",
   "description": "Tools for deploying services to AWS",
   "type": "commonjs",

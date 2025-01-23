@@ -27,3 +27,5 @@ export * from './getStack';
 export * from './updateStack';
 export * from './deleteStack';
 export * from './validateTemplate';
+export * from './generateStackName';
+export * from './isStackTerminal';

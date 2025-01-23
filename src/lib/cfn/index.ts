@@ -29,3 +29,4 @@ export * from './deleteStack';
 export * from './validateTemplate';
 export * from './generateStackName';
 export * from './isStackTerminal';
+export * from './waitUntilStackTerminal';

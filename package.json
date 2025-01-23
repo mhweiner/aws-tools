@@ -1,0 +1,52 @@
+{
+  "name": "aws-tools",
+  "version": "0.0.0-autorel",
+  "description": "Tools for deploying services to AWS",
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "bin",
+    "dist",
+    "package.json",
+    "package-lock.json"
+  ],
+  "bin": {
+    "create-stack": "./bin/create-stack",
+    "redeploy-stack": "./bin/delete-stack",
+    "update-stack": "./bin/update-stack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mhweiner/aws-tools.git"
+  },
+  "scripts": {
+    "prepare": "npm run build",
+    "test": "hoare 'src/**/*.spec.ts'",
+    "lint": "eslint ./ --ext .js,.ts",
+    "build": "tsc && tscp"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cloudformation": "3.616.0",
+    "@aws-sdk/client-ecr": "3.616.0",
+    "@aws-sdk/client-elastic-load-balancing-v2": "3.616.0",
+    "@aws-sdk/client-s3": "3.616.0",
+    "@aws-sdk/client-sts": "3.616.0",
+    "@esm2cjs/execa": "^6.1.1-cjs.1",
+    "dockerode": "^4.0.2",
+    "js-yaml": "^4.1.0",
+    "semver": "^7.5.1",
+    "typescript-cp": "^0.1.9"
+  },
+  "devDependencies": {
+    "@types/dockerode": "^3.3.28",
+    "@types/js-yaml": "^4.0.5",
+    "@types/node": "20.17.16",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
+    "eslint": "^8.34.0",
+    "hoare": "^3.0.17",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.3"
+  }
+}

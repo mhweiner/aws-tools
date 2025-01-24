@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const action = process.argv[2];
 const stackName = process.argv[3];
 const templateFile = process.argv[4];

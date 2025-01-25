@@ -26,14 +26,15 @@ yargs
     }
   )
   .command(
-    'delete-stack <stackName>',
+    'delete-stack <stackName> <repeatStackName>',
     'Delete a CloudFormation stack',
     (yargs) => {
       yargs.positional('stackName', { type: 'string', describe: 'Stack name' });
+      yargs.positional('repeatStackName', { type: 'string', describe: 'Repeat stack name to confirm deletion' });
     },
-    ({ stackName }) => {
+    ({ stackName, repeatStackName }) => {
       log(chalk.yellow(`Deleting stack: ${stackName}...`));
-      deleteStack(stackName);
+      deleteStack(stackName, repeatStackName);
     }
   )
   .command(

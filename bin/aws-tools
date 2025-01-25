@@ -1,26 +1,69 @@
 #!/usr/bin/env node
 
-const action = process.argv[2];
-const stackName = process.argv[3];
-const templateFile = process.argv[4];
-const paramsFile = process.argv[5];
+const yargs = require('yargs');
+const chalk = require('chalk');
 
-if (!['create-stack', 'redeploy-stack', 'update-stack'].includes(action)) {
-    console.error('Invalid action. Must be one of: create-stack, redeploy-stack, update-stack');
-    process.exit(1);
-}
+const { createStack } = require('../dist/createStack');
+const { deleteStack } = require('../dist/deleteStack');
+const { redeployStack } = require('../dist/redeployStack');
+const { updateStack } = require('../dist/updateStack');
 
-switch (action) {
-    case 'create-stack':
-        require('../dist/createStack').createStack(stackName, templateFile, paramsFile);
-        break;
-    case 'redeploy-stack':
-        require('../dist/redeployStack').redeployStack(stackName, templateFile, paramsFile);
-        break;
-    case 'update-stack':
-        require('../dist/updateStack').updateStack(stackName, templateFile, paramsFile);
-        break;
-    default:
-        console.error('Unknown action');
-        process.exit(1);
-}
+const log = console.log;
+const error = (msg) => log(chalk.red(`Error: ${msg}`));
+
+yargs
+  .command(
+    'create-stack <stackName> <templateFile> <paramsFile>',
+    'Create a CloudFormation stack',
+    (yargs) => {
+      yargs.positional('stackName', { type: 'string', describe: 'Stack name' });
+      yargs.positional('templateFile', { type: 'string', describe: 'CloudFormation template file' });
+      yargs.positional('paramsFile', { type: 'string', describe: 'Parameter file' });
+    },
+    ({ stackName, templateFile, paramsFile }) => {
+      log(chalk.green(`Creating stack: ${stackName}...`));
+      createStack(stackName, templateFile, paramsFile);
+    }
+  )
+  .command(
+    'delete-stack <stackName>',
+    'Delete a CloudFormation stack',
+    (yargs) => {
+      yargs.positional('stackName', { type: 'string', describe: 'Stack name' });
+    },
+    ({ stackName }) => {
+      log(chalk.yellow(`Deleting stack: ${stackName}...`));
+      deleteStack(stackName);
+    }
+  )
+  .command(
+    'redeploy-stack <stackName> <templateFile> <paramsFile>',
+    'Redeploy a CloudFormation stack',
+    (yargs) => {
+      yargs.positional('stackName', { type: 'string', describe: 'Stack name' });
+      yargs.positional('templateFile', { type: 'string', describe: 'CloudFormation template file' });
+      yargs.positional('paramsFile', { type: 'string', describe: 'Parameter file' });
+    },
+    ({ stackName, templateFile, paramsFile }) => {
+      log(chalk.blue(`Redeploying stack: ${stackName}...`));
+      redeployStack(stackName, templateFile, paramsFile);
+    }
+  )
+  .command(
+    'update-stack <stackName> <templateFile> <paramsFile>',
+    'Update a CloudFormation stack',
+    (yargs) => {
+      yargs.positional('stackName', { type: 'string', describe: 'Stack name' });
+      yargs.positional('templateFile', { type: 'string', describe: 'CloudFormation template file' });
+      yargs.positional('paramsFile', { type: 'string', describe: 'Parameter file' });
+    },
+    ({ stackName, templateFile, paramsFile }) => {
+      log(chalk.cyan(`Updating stack: ${stackName}...`));
+      updateStack(stackName, templateFile, paramsFile);
+    }
+  )
+  .demandCommand(1, chalk.red('You must provide a valid command. Use --help for more information.'))
+  .help()
+  .alias('h', 'help')
+  .version('1.0.0')
+  .argv;

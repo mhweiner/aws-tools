@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 const yargs = require('yargs');
-const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
 
 const { createStack } = require('../dist/createStack');
 const { deleteStack } = require('../dist/deleteStack');
@@ -9,7 +10,12 @@ const { redeployStack } = require('../dist/redeployStack');
 const { updateStack } = require('../dist/updateStack');
 
 const log = console.log;
-const error = (msg) => log(chalk.red(`Error: ${msg}`));
+const error = (msg) => log(`\x1b[31mError: ${msg}\x1b[0m`);
+
+// Read version from package.json
+const packageJsonPath = path.resolve(__dirname, '../package.json');
+const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+const version = packageJson.version;
 
 yargs
   .command(
@@ -21,7 +27,7 @@ yargs
       yargs.positional('paramsFile', { type: 'string', describe: 'Parameter file' });
     },
     ({ stackName, templateFile, paramsFile }) => {
-      log(chalk.green(`Creating stack: ${stackName}...`));
+      log(`Creating stack: ${stackName}...`);
       createStack(stackName, templateFile, paramsFile);
     }
   )
@@ -33,7 +39,7 @@ yargs
       yargs.positional('repeatStackName', { type: 'string', describe: 'Repeat stack name to confirm deletion' });
     },
     ({ stackName, repeatStackName }) => {
-      log(chalk.yellow(`Deleting stack: ${stackName}...`));
+      log(`Deleting stack: ${stackName}...`);
       deleteStack(stackName, repeatStackName);
     }
   )
@@ -46,7 +52,7 @@ yargs
       yargs.positional('paramsFile', { type: 'string', describe: 'Parameter file' });
     },
     ({ stackName, templateFile, paramsFile }) => {
-      log(chalk.blue(`Redeploying stack: ${stackName}...`));
+      log(`Redeploying stack: ${stackName}...`);
       redeployStack(stackName, templateFile, paramsFile);
     }
   )
@@ -59,12 +65,20 @@ yargs
       yargs.positional('paramsFile', { type: 'string', describe: 'Parameter file' });
     },
     ({ stackName, templateFile, paramsFile }) => {
-      log(chalk.cyan(`Updating stack: ${stackName}...`));
+      log(`Updating stack: ${stackName}...`);
       updateStack(stackName, templateFile, paramsFile);
     }
   )
-  .demandCommand(1, chalk.red('You must provide a valid command. Use --help for more information.'))
+  .demandCommand(1)
+  .fail((msg, err, yargs) => {
+    if (msg) {
+      error(msg);
+      log('\n' + yargs.help());
+    }
+    process.exit(1);
+  })
+  .strict()
   .help()
   .alias('h', 'help')
-  .version('1.0.0')
+  .version(version) // Automatically pulls version from package.json
   .argv;
